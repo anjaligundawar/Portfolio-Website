@@ -115,12 +115,14 @@
   min-height: clamp(130px, 17vh, 230px);
   padding: 18px;
 }
-.pv__avatar {
-  width: 33%; aspect-ratio: 1; object-fit: cover; object-position: top;
-  border: 3px solid var(--ink);
-  border-radius: 50%;
-  background: var(--lavender-light);
+/* "AG" pixel emblem (drawn by tools/logo/build.py); bobs in 8-bit steps */
+.pv__logo {
+  width: 36%; aspect-ratio: 1;
+  image-rendering: pixelated;
+  filter: drop-shadow(4px 4px 0 var(--violet-deep));
+  animation: bob 1.6s steps(2) infinite;
 }
+@keyframes bob { 50% { translate: 0 -4px; } }
 .pv__text { display: flex; flex-direction: column; gap: 4px; }
 .pv__small { font: clamp(18px, 1.7vw, 26px) var(--font-ui); color: var(--outline); }
 .pv__text b { font: 700 clamp(26px, 3.4vw, 50px) var(--font-hero); color: var(--magenta); }
@@ -458,4 +460,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pv { transition: none; }
+  .pv__logo { animation: none; }
 }
