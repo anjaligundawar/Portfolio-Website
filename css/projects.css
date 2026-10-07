@@ -80,7 +80,7 @@
   box-shadow: inset -3px -3px 0 var(--pink-shade), 0 5px 0 var(--violet-deep);
   font: inherit;
   text-align: left;
-  cursor: pointer;
+  cursor: var(--hand);
   opacity: var(--fade);
   transform: translateX(var(--shift)) rotateX(var(--tilt)) scale(var(--scale));
   transition: background 120ms steps(2);
@@ -137,7 +137,7 @@
   border: 2px solid var(--ink);
   box-shadow: inset -2px -2px 0 var(--lavender), 0 3px 0 var(--ink);
   font: 14px/1 var(--font-ui);
-  cursor: pointer;
+  cursor: var(--hand);
 }
 .rail__arrow:hover { background: var(--pink); }
 .rail__arrow:active { transform: translateY(3px); box-shadow: none; }
@@ -160,7 +160,7 @@
   padding: 0;
   background: var(--violet-deep);
   border: 0;
-  cursor: pointer;
+  cursor: var(--hand);
 }
 .rail__notch:hover { background: var(--lavender); }
 .rail__notch.is-on { background: var(--magenta); }
@@ -226,7 +226,7 @@
   border: 2px solid var(--ink);
   box-shadow: inset -2px -2px 0 var(--pink-shade);
   font: 700 18px/1 var(--font-ui);
-  cursor: pointer;
+  cursor: var(--hand);
 }
 .sub__close:hover { background: var(--ink); color: var(--pink); }
 .sub__body { overflow: auto; padding: 16px 18px 20px; }

@@ -22,7 +22,7 @@
   border: 3px solid var(--ink);
   box-shadow: 8px 8px 0 var(--lavender), 8px 8px 0 3px var(--ink);
   rotate: -3deg;
-  cursor: zoom-in;
+  cursor: var(--hand);
   transition: rotate 120ms steps(3), translate 120ms steps(3);
 }
 .paper:hover, .paper:focus-visible { rotate: 0deg; translate: 0 -4px; }
@@ -59,7 +59,7 @@
 .resume__meta { margin: 8px 0 22px; font: 20px var(--font-ui); color: var(--outline); }
 /* View on top, Download right below it, same width */
 .resume__btns { display: grid; gap: 18px; width: min(100%, 290px); }
-.resume__btns .pixel-btn { justify-content: center; cursor: pointer; }
+.resume__btns .pixel-btn { justify-content: center; cursor: var(--hand); }
 
 .resume__status {
   display: flex;

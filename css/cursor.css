@@ -1,12 +1,15 @@
-/* ===== the pixel arrow cursor (assets/cursor.png, made by tools/cursor) =====
-   Set on <html> so everything inherits it. Links and buttons keep their
-   usual pointer hand, so it's still obvious what can be clicked.
-   The hotspot "2 2" is the arrow's tip, in 1x pixels. */
-html {
-  cursor: url("../assets/cursor.png") 2 2, auto;
-  cursor: image-set(url("../assets/cursor.png") 1x, url("../assets/cursor@2x.png") 2x) 2 2, auto;
+/* ===== pixel cursors (assets/cursor*.png, made by tools/cursor) =====
+   --arrow is sylvy's arrow (build.py cuts it out of her image) and --hand is
+   the matching pointing hand (hand.py draws it). Anything clickable uses
+   cursor: var(--hand) instead of the system "pointer" hand. The numbers after
+   each image are its hotspot (the arrow's tip, the fingertip) in 1x pixels;
+   "auto" / "pointer" at the end is the fallback if the image can't load. */
+:root {
+  --arrow: image-set(url("../assets/cursor.png") 1x, url("../assets/cursor@2x.png") 2x) 2 2, auto;
+  --hand: image-set(url("../assets/cursor-hand.png") 1x, url("../assets/cursor-hand@2x.png") 2x) 12 2, pointer;
 }
-a[href], button { cursor: pointer; }
+html { cursor: var(--arrow); }
+a[href], button { cursor: var(--hand); }
 
 /* ----- the fading trail (js/cursor.js), start page only ----- */
 .cursor-trail {
