@@ -53,7 +53,7 @@
 .stack { position: absolute; inset: 46px 0 0; }
 .pv {
   /* where each slot sits on the desktop (centre point, % of the stack) */
-  --x: 50%; --y: 50%; --w: clamp(230px, 27vw, 360px);
+  --x: 50%; --y: 50%; --w: clamp(300px, 38vw, 560px);
   --bar: var(--pink);
   position: absolute;
   left: var(--x); top: var(--y);
@@ -73,10 +73,10 @@
   transition: left .45s steps(6), top .45s steps(6), width .45s steps(6), scale .15s steps(2), opacity .2s steps(3);
 }
 /* slot-0 = front & centre; the rest are scattered behind it (like the sketch) */
-.pv.slot-0 { --x: 50%; --y: 52%; --w: clamp(260px, 32vw, 420px); z-index: 4; }
-.pv.slot-1 { --x: 31%; --y: 30%; z-index: 3; }
-.pv.slot-2 { --x: 77%; --y: 28%; z-index: 2; }
-.pv.slot-3 { --x: 27%; --y: 72%; z-index: 1; }
+.pv.slot-0 { --x: 50%; --y: 55%; --w: clamp(340px, 46vw, 680px); z-index: 4; }
+.pv.slot-1 { --x: 27%; --y: 30%; z-index: 3; }
+.pv.slot-2 { --x: 74%; --y: 27%; z-index: 2; }
+.pv.slot-3 { --x: 24%; --y: 73%; z-index: 1; }
 /* hovering a window behind pulls it to the top layer; leaving puts it back */
 .pv:hover, .pv:focus-visible { z-index: 10; scale: 1.04; }
 .pv.is-hidden { opacity: 0; scale: .6; transition: none; }
@@ -92,7 +92,7 @@
   border-bottom: 3px solid var(--ink);
 }
 .pv__title {
-  font: 700 15px var(--font-title);
+  font: 700 clamp(15px, 1.4vw, 20px) var(--font-title);
   text-transform: uppercase;
   letter-spacing: .06em;
 }
@@ -112,8 +112,8 @@
 }
 .pv__body {
   display: flex; align-items: center; justify-content: center; gap: 14px;
-  min-height: clamp(96px, 11vw, 140px);
-  padding: 14px;
+  min-height: clamp(130px, 17vh, 230px);
+  padding: 18px;
 }
 .pv__avatar {
   width: 33%; aspect-ratio: 1; object-fit: cover; object-position: top;
@@ -122,17 +122,20 @@
   background: var(--lavender-light);
 }
 .pv__text { display: flex; flex-direction: column; gap: 4px; }
-.pv__small { font: 18px var(--font-ui); color: var(--outline); }
-.pv__text b { font: 700 clamp(22px, 2.4vw, 30px) var(--font-hero); color: var(--magenta); }
+.pv__small { font: clamp(18px, 1.7vw, 26px) var(--font-ui); color: var(--outline); }
+.pv__text b { font: 700 clamp(26px, 3.4vw, 50px) var(--font-hero); color: var(--magenta); }
 .pv__body--icons i { width: 18%; aspect-ratio: 1; border: 3px solid var(--ink); }
 .folder { background: var(--lavender-light); clip-path: polygon(0 12%, 40% 12%, 50% 0, 100% 0, 100% 100%, 0 100%); border: 0 !important; box-shadow: inset 0 -6px 0 var(--outline-sm); }
-.dot { border-radius: 50%; background: var(--pink); }
-.dot:nth-child(2) { background: var(--magenta); }
-.dot:nth-child(3) { background: var(--lavender-light); }
+/* Socials preview: three little round icons */
+.pv__orb { display: grid; place-items: center; border-radius: 50%; background: var(--magenta); }
+.pv__orb svg { width: 62%; display: block; }
+.pv__orb--github { background: var(--lavender-light); }
+.pv__orb--leetcode { background: var(--pink); }
 .pv__body--doc { flex-direction: column; align-items: stretch; gap: 8px; padding: 18px 22px; }
 .pv__body--doc i { height: 8px; background: var(--lavender-light); }
 .pv__body--doc i:nth-child(1) { width: 60%; background: var(--magenta); }
 .pv__body--doc i:nth-child(3) { width: 80%; }
+.pv .hearts svg { width: clamp(18px, 1.8vw, 26px); height: auto; aspect-ratio: 7 / 6; }
 .pv__foot {
   padding: 3px 10px;
   border-top: 2px dashed var(--pink-shade);
@@ -430,7 +433,6 @@
 /* ---------- placeholder windows ---------- */
 .win--soon { width: min(100%, 720px); }
 .win--projects { --bar: var(--lavender-light); }
-.win--socials { --bar: var(--pink-shade); }
 .win--resume { --bar: var(--lavender); }
 .win__loading {
   margin: 0;
@@ -446,11 +448,11 @@
   .win__menu { display: none; }
   .win { box-shadow: inset 3px 3px 0 #fff6fc, inset -3px -3px 0 var(--pink-shade), 6px 6px 0 var(--violet-deep), 6px 6px 0 3px var(--ink); }
   .menubar { font-size: 20px; gap: 10px; }
-  .pv { --w: min(62vw, 260px); }
-  .pv.slot-0 { --x: 50%; --y: 50%; --w: min(74vw, 300px); }
-  .pv.slot-1 { --x: 36%; --y: 22%; }
-  .pv.slot-2 { --x: 66%; --y: 34%; }
-  .pv.slot-3 { --x: 40%; --y: 78%; }
+  .pv { --w: min(80vw, 340px); }
+  .pv.slot-0 { --x: 50%; --y: 52%; --w: min(90vw, 380px); }
+  .pv.slot-1 { --x: 45%; --y: 21%; }
+  .pv.slot-2 { --x: 55%; --y: 35%; }
+  .pv.slot-3 { --x: 47%; --y: 79%; }
   .menubar__clock { display: none; }
 }
 
