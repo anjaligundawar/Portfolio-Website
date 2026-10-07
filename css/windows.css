@@ -126,9 +126,11 @@
 .pv__text b { font: 700 clamp(26px, 3.4vw, 50px) var(--font-hero); color: var(--magenta); }
 .pv__body--icons i { width: 18%; aspect-ratio: 1; border: 3px solid var(--ink); }
 .folder { background: var(--lavender-light); clip-path: polygon(0 12%, 40% 12%, 50% 0, 100% 0, 100% 100%, 0 100%); border: 0 !important; box-shadow: inset 0 -6px 0 var(--outline-sm); }
-.dot { border-radius: 50%; background: var(--pink); }
-.dot:nth-child(2) { background: var(--magenta); }
-.dot:nth-child(3) { background: var(--lavender-light); }
+/* Socials preview: three little round icons */
+.pv__orb { display: grid; place-items: center; border-radius: 50%; background: var(--magenta); }
+.pv__orb svg { width: 62%; display: block; }
+.pv__orb--github { background: var(--lavender-light); }
+.pv__orb--leetcode { background: var(--pink); }
 .pv__body--doc { flex-direction: column; align-items: stretch; gap: 8px; padding: 18px 22px; }
 .pv__body--doc i { height: 8px; background: var(--lavender-light); }
 .pv__body--doc i:nth-child(1) { width: 60%; background: var(--magenta); }
@@ -431,7 +433,6 @@
 /* ---------- placeholder windows ---------- */
 .win--soon { width: min(100%, 720px); }
 .win--projects { --bar: var(--lavender-light); }
-.win--socials { --bar: var(--pink-shade); }
 .win--resume { --bar: var(--lavender); }
 .win__loading {
   margin: 0;

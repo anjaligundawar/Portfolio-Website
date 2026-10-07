@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/windows.css" />
+  <link rel="stylesheet" href="css/projects.css" />
+  <link rel="stylesheet" href="css/socials.css" />
 </head>
 <body>
   <!-- risograph grain over everything -->
@@ -29,9 +31,6 @@
         <h1 class="welcome__name pixel-hero bouncy" data-text="Anjali Gundawar's"></h1>
         <p class="welcome__small pixel-title bouncy" data-text="Portfolio"></p>
       </header>
-
-      <!-- Reserved spot for the pet sprite (coming later). -->
-      <div class="pet-slot" id="pet" aria-hidden="true"></div>
 
       <div class="console" id="console" aria-label="Pink handheld game console">
         <canvas class="console__art" id="console-art"></canvas>
@@ -59,6 +58,7 @@
   <!-- One full-viewport canvas for the ASCII particles, so characters can fly
        past the edges of the console screen. -->
   <canvas id="ascii-canvas" aria-hidden="true"></canvas>
+  <canvas id="letters-canvas" aria-hidden="true"></canvas>
 
   <!-- ============ SECTION 2: WINDOWS ============ -->
   <!-- A retro "desktop" that fills the screen. All the windows sit on it as small
@@ -105,7 +105,7 @@
 
       <button class="pv pv--socials" data-win="socials" type="button" aria-label="Open Socials">
         <span class="pv__bar"><span class="pv__title">Socials</span><span class="pv__num">3</span></span>
-        <span class="pv__body pv__body--icons"><i class="dot"></i><i class="dot"></i><i class="dot"></i></span>
+        <span class="pv__body pv__body--icons"><!-- filled by js/socials.js --></span>
         <span class="pv__foot">click to open</span>
       </button>
 
@@ -171,15 +171,58 @@
         </div>
       </article>
 
-      <!-- Placeholders for the next windows -->
-      <article class="win win--soon win--projects" id="projects" aria-labelledby="projects-title" hidden>
+      <!-- Window 2: Projects. The list items are built by js/projects.js. -->
+      <article class="win win--projects" id="projects" aria-labelledby="projects-title" hidden>
         <header class="win__bar"><span class="win__icon" aria-hidden="true"><svg><use href="#heart"/></svg></span><h2 class="win__title" id="projects-title">Projects</h2><span class="win__btns"><i aria-hidden="true">_</i><i aria-hidden="true">&#9633;</i><button class="win__close" type="button" aria-label="Close window">&times;</button></span></header>
-        <div class="win__body"><p class="win__loading">loading projects<span class="blink">...</span></p></div>
+        <div class="win__body">
+          <div class="win__menu" aria-hidden="true"><span>File</span><span>Edit</span><span>View</span><span>Help</span></div>
+          <div class="projects">
+            <p class="projects__path"><span>C:\anjali\projects\</span><span>6 items</span></p>
+            <div class="projects__lens">
+              <!-- the fisheye list: scrolls on its own, js/projects.js bends it -->
+              <ul class="fisheye" id="proj-list" aria-label="Projects, click one to open it"></ul>
+              <!-- chunky pixel scrollbar: arrows, one notch per project, and a thumb -->
+              <div class="rail" aria-label="Scroll the project list">
+                <button class="rail__arrow" id="proj-up" type="button" aria-label="Previous project">&#9650;</button>
+                <div class="rail__track"><span class="rail__thumb" id="proj-thumb"></span><div class="rail__notches" id="proj-rail"></div></div>
+                <button class="rail__arrow" id="proj-down" type="button" aria-label="Next project">&#9660;</button>
+              </div>
+            </div>
+            <p class="projects__hint">scroll the list <span class="blink">&#9650;&#9660;</span> click a project to open it</p>
+          </div>
+        </div>
+
+        <!-- the sub-window that pops up on top with one project's details -->
+        <div class="sub" id="proj-sub" hidden>
+          <div class="sub__backdrop"></div>
+          <section class="sub__win" role="dialog" aria-modal="true" aria-labelledby="sub-name">
+            <header class="sub__bar"><span class="sub__file"></span><button class="sub__close" type="button" aria-label="Close project">&times;</button></header>
+            <div class="sub__body">
+              <div class="sub__head"><span class="sub__icon"></span><h3 class="sub__name" id="sub-name"></h3></div>
+              <p class="sub__summary"></p>
+              <ul class="sub__tech" aria-label="Tech stack"></ul>
+              <div class="sub__link"></div>
+            </div>
+          </section>
+        </div>
       </article>
-      <article class="win win--soon win--socials" id="socials" aria-labelledby="socials-title" hidden>
+
+      <!-- Window 3: Socials. The buttons are built by js/socials.js. -->
+      <article class="win win--socials" id="socials" aria-labelledby="socials-title" hidden>
         <header class="win__bar"><span class="win__icon" aria-hidden="true"><svg><use href="#heart"/></svg></span><h2 class="win__title" id="socials-title">Socials</h2><span class="win__btns"><i aria-hidden="true">_</i><i aria-hidden="true">&#9633;</i><button class="win__close" type="button" aria-label="Close window">&times;</button></span></header>
-        <div class="win__body"><p class="win__loading">loading socials<span class="blink">...</span></p></div>
+        <div class="win__body">
+          <div class="win__menu" aria-hidden="true"><span>File</span><span>Edit</span><span>View</span><span>Help</span></div>
+          <div class="socials">
+            <span class="sparkle" style="left: 9%; top: 18%" aria-hidden="true"></span>
+            <span class="sparkle" style="right: 11%; top: 30%; animation-delay: -1.2s" aria-hidden="true"></span>
+            <p class="socials__hi">let's connect!</p>
+            <ul class="socials__list" id="social-list" aria-label="Find me on"></ul>
+          </div>
+          <p class="socials__status"><span><i class="socials__led" aria-hidden="true"></i><span id="social-status"></span></span><span aria-hidden="true">friends.exe</span></p>
+        </div>
       </article>
+
+      <!-- Placeholder for the next window -->
       <article class="win win--soon win--resume" id="resume" aria-labelledby="resume-title" hidden>
         <header class="win__bar"><span class="win__icon" aria-hidden="true"><svg><use href="#heart"/></svg></span><h2 class="win__title" id="resume-title">Resume</h2><span class="win__btns"><i aria-hidden="true">_</i><i aria-hidden="true">&#9633;</i><button class="win__close" type="button" aria-label="Close window">&times;</button></span></header>
         <div class="win__body"><p class="win__loading">loading resume<span class="blink">...</span></p></div>
@@ -189,5 +232,8 @@
 
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/windows.js"></script>
+  <script type="module" src="js/projects.js"></script>
+  <script type="module" src="js/socials.js"></script>
+  <script type="module" src="js/pet.js"></script>
 </body>
 </html>

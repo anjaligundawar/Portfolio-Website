@@ -78,8 +78,21 @@ body {
   30% { transform: translateY(-0.14em); }
 }
 
-/* ---------- pet slot (reserved) ---------- */
-.pet-slot { position: absolute; width: 72px; height: 72px; }
+/* ---------- the pet (js/pet.js) ---------- */
+/* One sprite-sheet <div>, moved with transform. js/pet.js moves it between
+   layers: under the heading, behind the window previews, above an open window. */
+.pet {
+  position: fixed; left: 0; top: 0;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+  will-change: transform;
+  z-index: 15;                        /* the floor: over the particles, under the grain */
+}
+.pet[data-layer="console"] { z-index: 1; }
+.pet[data-layer="stack"] { z-index: 0; } /* previews are 1-4, so it runs behind them */
+.pet[data-layer="win"] { z-index: 55; }  /* perched on the open window, over the menu bar */
+.welcome { z-index: 2; }                 /* letters stay in front of the pet */
 
 /* ---------- the console ---------- */
 /* --px is the size of one art pixel, set in main.js so the console
@@ -173,8 +186,8 @@ body {
   rotate: 8deg;
 }
 
-/* ---------- particle canvas ---------- */
-#ascii-canvas {
+/* ---------- particle canvases (character, lettering) ---------- */
+#ascii-canvas, #letters-canvas {
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -182,6 +195,28 @@ body {
   pointer-events: none; /* clicks pass straight through */
   z-index: 10;
 }
+
+/* ---------- inside the console screen ----------
+   The desktop overlaps the last screen of the start section (negative margin),
+   so when the zoom finishes it is already filling the window: no sliding down.
+   Its thick pink border is the edge of the console screen you're now inside. */
+.start__stage { will-change: transform; }
+.desktop {
+  margin-top: -100vh;
+  margin-top: -100svh;
+  z-index: 12; /* above the particle canvases */
+  border: clamp(6px, 1vw, 12px) solid var(--pink);
+}
+/* a thin dark line on the inside of the pink, like the screen's inner bezel */
+.desktop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 3px var(--violet-deep), inset 0 0 0 6px rgb(27 26 30 / .35);
+  pointer-events: none;
+  z-index: 60;
+}
+body:not(.in-screen) .desktop { pointer-events: none; }
 
 @media (max-width: 640px) {
   .start { height: 240vh; }
