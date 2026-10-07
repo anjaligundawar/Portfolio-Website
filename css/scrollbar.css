@@ -1,0 +1,24 @@
+/* ===== pixel scrollbars, for the page and every inner scrolling box =====
+   Chrome, Edge and Safari let us style the scrollbar's parts with
+   ::-webkit-scrollbar: a dark track and a chunky lavender thumb with a hard
+   pixel bevel (two inset shadows, no blur, no rounding). Firefox only takes
+   two colours, so it gets scrollbar-color. Newer Chrome ignores the
+   ::-webkit-scrollbar parts once scrollbar-color is set, hence the @supports. */
+::-webkit-scrollbar { width: 14px; height: 14px; }
+::-webkit-scrollbar-track {
+  background: var(--bg-alt);
+  box-shadow: inset 2px 0 0 var(--ink), inset -2px 0 0 var(--ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--lavender-light);
+  border: 2px solid var(--ink);
+  box-shadow: inset 3px 3px 0 var(--blush), inset -3px -3px 0 var(--outline);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--pink); }
+::-webkit-scrollbar-thumb:active { background: var(--magenta); }
+::-webkit-scrollbar-corner { background: var(--bg-alt); }
+::-webkit-scrollbar-button { display: none; }
+
+@supports not selector(::-webkit-scrollbar) {
+  * { scrollbar-color: var(--lavender-light) var(--bg-alt); }
+}
