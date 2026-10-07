@@ -78,8 +78,21 @@ body {
   30% { transform: translateY(-0.14em); }
 }
 
-/* ---------- pet slot (reserved) ---------- */
-.pet-slot { position: absolute; width: 72px; height: 72px; }
+/* ---------- the pet (js/pet.js) ---------- */
+/* One sprite-sheet <div>, moved with transform. js/pet.js moves it between
+   layers: under the heading, behind the window previews, above an open window. */
+.pet {
+  position: fixed; left: 0; top: 0;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+  will-change: transform;
+  z-index: 15;                        /* the floor: over the particles, under the grain */
+}
+.pet[data-layer="console"] { z-index: 1; }
+.pet[data-layer="stack"] { z-index: 0; } /* previews are 1-4, so it runs behind them */
+.pet[data-layer="win"] { z-index: 60; }  /* perched on the open window, over the menu bar */
+.welcome { z-index: 2; }                 /* letters stay in front of the pet */
 
 /* ---------- the console ---------- */
 /* --px is the size of one art pixel, set in main.js so the console

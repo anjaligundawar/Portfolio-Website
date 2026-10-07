@@ -92,7 +92,6 @@ letsStart.textContent = lettering("Lets") + "\n\n" + lettering("Start");
 const stage = document.querySelector(".start");
 const welcome = document.querySelector(".welcome");
 const box = document.getElementById("portrait-box");
-const pet = document.getElementById("pet");
 const fx = new Explosion(document.getElementById("ascii-canvas"), { reducedMotion });
 
 function layout() {
@@ -112,12 +111,6 @@ function layout() {
   const fitW = (menu.clientWidth * 0.9) / (ASCII_COLS * 0.6);
   const fitH = (menu.clientHeight * 0.62) / lineCount;
   letsStart.style.fontSize = `${Math.min(fitW, fitH)}px`;
-
-  // park the (future) pet just above the console's top-left corner
-  const c = consoleEl.getBoundingClientRect();
-  const s = consoleEl.parentElement.getBoundingClientRect();
-  pet.style.left = `${c.left - s.left + c.width * 0.02}px`;
-  pet.style.top = `${c.top - s.top - 80}px`;
 }
 
 // how far through the start section we've scrolled: 0..1
