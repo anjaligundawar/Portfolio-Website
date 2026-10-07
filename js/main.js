@@ -157,10 +157,23 @@ const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 let ticking = false;
 let exploding = false;
 let inside = false;
-function render() {
+// The progress we actually draw. Instead of jumping straight to the scroll
+// position (a mouse wheel moves in big notches), it eases towards it a bit
+// every frame, so the zoom glides even when the scrolling is jumpy.
+let drawn = 0;
+let lastFrame = performance.now();
+function render(now = performance.now()) {
   ticking = false;
-  let p = progress();
-  if (p > 0.995) p = 1; // the last pixel of scroll can land a hair short
+  let target = progress();
+  if (target > 0.995) target = 1; // the last pixel of scroll can land a hair short
+  const dt = Math.min(64, now - lastFrame);
+  lastFrame = now;
+  // close ~16% of the gap per 60fps frame, whatever the real frame rate is
+  const k = reducedMotion ? 1 : 1 - Math.pow(0.84, dt / 16.7);
+  drawn += (target - drawn) * k;
+  if (Math.abs(target - drawn) < 0.001) drawn = target;
+  else requestFrame(); // not there yet: draw another frame
+  const p = drawn;
 
   // as soon as scrolling starts, stand her still in the first idle pose,
   // so a half-turned frame never gets blown apart
@@ -190,8 +203,8 @@ function render() {
 
   // 3. the desktop. It sits right under the start section in the page, so
   // while we're still scrolling it is pulled up to the top of the window
-  // (translateY) and grows out of the screen in choppy 8-bit steps.
-  const q = Math.round(clamp01((p - 0.82) / 0.18) * 6) / 6;
+  // (translateY) and grows out of the screen as it fades in.
+  const q = ease(clamp01((p - 0.8) / 0.2));
   const below = Math.max(0, desktop.offsetTop - scrollY);
   desktop.style.visibility = q === 0 ? "hidden" : "";
   desktop.style.opacity = q === 1 ? "" : q;
@@ -211,23 +224,62 @@ function requestFrame() {
 await document.fonts.ready; // heading height depends on the pixel fonts
 layout();
 render();
-addEventListener("scroll", requestFrame, { passive: true });
 addEventListener("resize", () => { layout(); requestFrame(); });
 
-// After the last window, windows.js asks to go home: glide the page back to
-// the top. render() runs on every scroll, so the zoom and the explosion play
-// backwards on their own and she reassembles on the console.
-addEventListener("screen:exit", () => {
+// ---------- 6. gliding in and out ----------
+// glideTo() scrolls the page itself, easing in and out. render() follows the
+// scroll, so the zoom and the explosion play along on their own.
+let glide = null;
+function glideTo(y, ms) {
   const from = scrollY;
-  const ms = reducedMotion ? 0 : 1800;
   const t0 = performance.now();
-  const glide = (now) => {
-    const k = ms ? clamp01((now - t0) / ms) : 1;
-    scrollTo(0, from * (1 - ease(k)));
-    if (k < 1) requestAnimationFrame(glide);
+  const id = {};
+  glide = id;
+  const frame = (now) => {
+    if (glide !== id) return; // cancelled, or another glide took over
+    const t = ms && !reducedMotion ? clamp01((now - t0) / ms) : 1;
+    scrollTo(0, from + (y - from) * ease(t));
+    if (t < 1) requestAnimationFrame(frame);
+    else glide = null;
   };
-  requestAnimationFrame(glide);
-});
+  requestAnimationFrame(frame);
+}
+// The visitor scrolling again takes over from a glide. A trackpad flick keeps
+// sending wheel events for a moment after the fingers lift, so only the start
+// of a new wheel gesture (after a short quiet gap) counts.
+let lastWheel = 0;
+addEventListener("wheel", () => {
+  const now = performance.now();
+  if (now - lastWheel > 220) glide = null;
+  lastWheel = now;
+}, { passive: true });
+addEventListener("touchstart", () => { glide = null; }, { passive: true });
+
+// Stopping halfway through the zoom looks broken, so when the scrolling
+// pauses there we finish the trip in the direction it was going: into
+// the screen, or back out to the start.
+const ZOOM_FROM = 0.3; // before this it's only the explosion, fine to pause on
+let lastY = scrollY;
+let heading = 1;
+let settleTimer;
+addEventListener("scroll", () => {
+  requestFrame();
+  const moved = scrollY - lastY;
+  lastY = scrollY;
+  if (glide) return; // our own glide moving the page
+  if (moved) heading = Math.sign(moved);
+  clearTimeout(settleTimer);
+  settleTimer = setTimeout(() => {
+    const p = progress();
+    if (glide || p <= ZOOM_FROM || p >= 0.995) return;
+    const end = stage.offsetHeight - innerHeight;
+    glideTo(heading > 0 ? end : 0, 900);
+  }, 160);
+}, { passive: true });
+
+// After the last window, windows.js asks to go home: glide the page back to
+// the top, and she reassembles on the console.
+addEventListener("screen:exit", () => glideTo(0, 1800));
 
 // Play the sprite animation: show a frame, wait its time, move on.
 // It pauses while the page is scrolled, so the explosion stays steady.
