@@ -2,7 +2,9 @@
 // The pet: a little ghost that lives on top of whatever is on screen.
 //
 //   start page        -> runs along the top of the console and jumps
-//                        up into the heading, knocking the letters
+//                        up into the heading, knocking the letters, for
+//                        2 seconds; then sits in a corner of the console
+//                        for 4 seconds, and round again
 //   window stack      -> hops from one window preview to another,
 //                        behind them
 //   a window is open  -> runs along its title bar and waves
@@ -230,10 +232,22 @@ function nextTask(ctx, s) {
   return { kind: "run", x, then: { kind: "sit" } };
 }
 
+// Start page rhythm: mess with the letters for PLAY seconds, then sit in a
+// corner of the console for REST seconds, and repeat.
+const PLAY = 2;
+const REST = 4;
+let playLeft = PLAY;
+
 function groundStep(dt, ctx, s) {
   pet.y = s.top;
   pet.x = s.left + pet.relX;
   if (pet.timer > 0) { pet.timer -= dt; if (pet.timer > 0) return; }
+  if (ctx === "console" && playLeft <= 0 && !pet.task?.rest) {
+    // play time is up: run to the nearer corner, sit, then play again
+    const corner = pet.x - s.left < s.right - pet.x ? s.left : s.right;
+    pet.task = { kind: "run", x: corner, rest: true,
+      then: { kind: "sit", t: REST, rest: true, then: { kind: "resume", rest: true } } };
+  }
   if (!pet.task) pet.task = nextTask(ctx, s);
   const t = pet.task;
   const next = () => { pet.task = t.then || null; pet.timer = 0; };
@@ -244,6 +258,10 @@ function groundStep(dt, ctx, s) {
     if (t.t <= 0) next();
   } else if (t.kind === "sit") {
     play("sit");
+    if (t.t !== undefined) { t.t -= dt; if (t.t <= 0) next(); }
+  } else if (t.kind === "resume") {
+    playLeft = PLAY;
+    next();
   } else if (t.kind === "run") {
     const goal = Math.min(s.right, Math.max(s.left, t.x));
     const d = goal - pet.x;
@@ -255,7 +273,7 @@ function groundStep(dt, ctx, s) {
     // straight up, high enough for the head to reach the letter
     const r = t.letter.getBoundingClientRect();
     const rise = Math.max(30, Math.min(320, pet.y - (FH - TOP_ROW) * SCALE - (r.top + r.height * 0.3)));
-    pet.task = { kind: "idle", t: rand(0.6, 1.8) };
+    pet.task = { kind: "idle", t: rand(0.1, 0.3) }; // straight on to the next letter
     pet.mode = "air";
     pet.vx = 0;
     pet.vy = -Math.sqrt(2 * GRAVITY * rise);
@@ -273,6 +291,8 @@ function groundStep(dt, ctx, s) {
 function step(dt) {
   const ctx = context();
   layer(ctx);
+  if (ctx !== "console") playLeft = PLAY; // a fresh round each time the start page comes back
+  else if (playLeft > 0) playLeft -= dt;
   const goal = goalSurface(ctx);
 
   if (pet.mode === "ground") {
