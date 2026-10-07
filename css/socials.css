@@ -88,7 +88,7 @@ a.social:focus-visible .social__orb { outline: 3px solid var(--pink); outline-of
 @keyframes social-ping { 50% { transform: scale(.7); } }
 
 /* LeetCode: visible, but clearly not clickable yet */
-.social.is-soon { cursor: default; }
+.social.is-soon { cursor: var(--arrow); }
 .social.is-soon .social__orb svg { opacity: .55; }
 .social__soon {
   position: absolute;

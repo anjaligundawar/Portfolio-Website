@@ -68,7 +68,7 @@
   background: var(--blush);
   border: 3px solid var(--ink);
   box-shadow: inset 3px 3px 0 #fff6fc, inset -3px -3px 0 var(--pink-shade), 8px 8px 0 var(--violet-deep);
-  cursor: pointer;
+  cursor: var(--hand);
   /* slots change in choppy 8-bit steps */
   transition: left .45s steps(6), top .45s steps(6), width .45s steps(6), scale .15s steps(2), opacity .2s steps(3);
 }
@@ -225,7 +225,7 @@
   border: 2px solid var(--ink);
   box-shadow: inset -2px -2px 0 var(--pink-shade);
 }
-.win__close { padding: 0; color: var(--ink); background: var(--magenta); cursor: pointer; }
+.win__close { padding: 0; color: var(--ink); background: var(--magenta); cursor: var(--hand); }
 .win__close:hover { background: var(--ink); color: var(--pink); }
 .win__menu {
   display: flex;

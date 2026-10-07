@@ -164,7 +164,7 @@ body {
 .btn {
   position: absolute; /* left/top/width/height set from BUTTONS in console.js */
   image-rendering: pixelated;
-  cursor: pointer;
+  cursor: var(--hand);
   touch-action: none; /* let a finger drag the sticks without scrolling */
   transition: transform 60ms steps(1); /* snap, no smooth slide: feels 8-bit */
 }
