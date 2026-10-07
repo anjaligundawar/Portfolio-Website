@@ -2,7 +2,11 @@
 //   arrive               -> previews pop up one by one (1, 2, 3, 4)
 //   click / scroll down  -> the front window zooms open to its full view
 //   × / Esc / scroll up  -> it zooms back; the next window comes to the front
-//   scroll down while open -> zoom out of this one, zoom into the next (loops)
+//   scroll down while open -> zoom out of this one, zoom into the next
+//   scroll down on the last window -> leave the console screen, back to the start
+// Getting in and out of the console screen itself is done in main.js; it
+// sends "screen:enter" / "screen:leave" / "screen:home" events, and we send
+// "screen:exit" when it's time to go home.
 
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const desktop = document.getElementById("desktop");
@@ -14,7 +18,9 @@ const ZOOM_MS = reducedMotion ? 0 : 420;
 const SHUFFLE_MS = reducedMotion ? 0 : 460;
 
 // order[0] is the front window; the rest follow in the order they come up next
-let order = ["about", "projects", "socials", "resume"];
+const START_ORDER = ["about", "projects", "socials", "resume"];
+let order = [...START_ORDER];
+const LAST = "resume"; // scrolling down on this window leaves the console
 let openId = null;
 let busy = false; // true while a zoom or shuffle is playing
 
@@ -39,22 +45,24 @@ function placeStack() {
 placeStack();
 
 // ---------- 3. arrival: previews pop up one by one ----------
-// IntersectionObserver tells us how much of the desktop is on screen,
-// which is much cheaper than checking positions on every scroll event.
+// main.js tells us when the zoom into the console screen has finished.
 Object.values(previews).forEach((pv) => pv.classList.add("is-hidden"));
 let shown = false;
-new IntersectionObserver(([e]) => {
-  if (e.intersectionRatio > 0.6 && !shown) {
-    shown = true;
-    ["about", "projects", "socials", "resume"].forEach((id, i) => {
-      setTimeout(() => previews[id].classList.remove("is-hidden"), reducedMotion ? 0 : 150 + i * 220);
-    });
-  } else if (e.intersectionRatio < 0.05 && shown && !openId) {
-    // scrolled back up to the console: reset so it replays next time
-    shown = false;
-    Object.values(previews).forEach((pv) => pv.classList.add("is-hidden"));
-  }
-}, { threshold: [0, 0.05, 0.6, 1] }).observe(desktop);
+addEventListener("screen:enter", () => {
+  if (shown) return;
+  shown = true;
+  ["about", "projects", "socials", "resume"].forEach((id, i) => {
+    setTimeout(() => previews[id].classList.remove("is-hidden"), reducedMotion ? 0 : 150 + i * 220);
+  });
+});
+// back at the start: reset so the pop-up plays again next time
+addEventListener("screen:home", () => {
+  if (!shown || openId) return;
+  shown = false;
+  order = [...START_ORDER];
+  placeStack();
+  Object.values(previews).forEach((pv) => pv.classList.add("is-hidden"));
+});
 
 // ---------- 4. zoom open / closed ----------
 // "FLIP" animation: put the full window where it really belongs, then use a
@@ -129,6 +137,12 @@ async function showWin(id) {
 }
 
 async function next() {
+  if (openId === LAST) {
+    // the end: close it and zoom back out of the console screen
+    await closeWin();
+    dispatchEvent(new Event("screen:exit"));
+    return;
+  }
   if (openId) await closeWin();
   openWin(order[0]);
 }
@@ -157,7 +171,7 @@ desktop.addEventListener("click", (e) => {
 // ---------- 6. scrolling, swiping and keys ----------
 // Once the desktop fills the screen the page can't scroll any further, so
 // "scroll down" means "open the next window" instead.
-const atDesktop = () => desktop.getBoundingClientRect().top <= 1;
+const atDesktop = () => document.body.classList.contains("in-screen");
 const openWinEl = () => (openId ? document.getElementById(openId) : null);
 const canScroll = (el, dir) =>
   dir > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 2 : el.scrollTop > 0;
