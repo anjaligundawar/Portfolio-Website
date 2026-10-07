@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/windows.css" />
   <link rel="stylesheet" href="css/projects.css" />
   <link rel="stylesheet" href="css/socials.css" />
+  <link rel="stylesheet" href="css/resume.css" />
 </head>
 <body>
   <!-- risograph grain over everything -->
@@ -222,10 +223,46 @@
         </div>
       </article>
 
-      <!-- Placeholder for the next window -->
-      <article class="win win--soon win--resume" id="resume" aria-labelledby="resume-title" hidden>
+      <!-- Window 4: Resume. "View" pops up the page in a sub-window (js/resume.js). -->
+      <article class="win win--resume" id="resume" aria-labelledby="resume-title" hidden>
         <header class="win__bar"><span class="win__icon" aria-hidden="true"><svg><use href="#heart"/></svg></span><h2 class="win__title" id="resume-title">Resume</h2><span class="win__btns"><i aria-hidden="true">_</i><i aria-hidden="true">&#9633;</i><button class="win__close" type="button" aria-label="Close window">&times;</button></span></header>
-        <div class="win__body"><p class="win__loading">loading resume<span class="blink">...</span></p></div>
+        <div class="win__body">
+          <div class="win__menu" aria-hidden="true"><span>File</span><span>Edit</span><span>View</span><span>Help</span></div>
+          <div class="resume">
+            <span class="sparkle" style="left: 8%; top: 16%" aria-hidden="true"></span>
+            <span class="sparkle" style="right: 9%; bottom: 22%; animation-delay: -1.4s" aria-hidden="true"></span>
+            <!-- a tilted paper preview of page 1; clicking it opens the viewer too -->
+            <button class="paper" id="resume-peek" type="button" aria-label="View resume">
+              <span class="paper__tab" aria-hidden="true">resume.pdf</span>
+              <img src="assets/resume-page.webp" alt="" width="1323" height="1871" loading="lazy" />
+            </button>
+            <div class="resume__side">
+              <p class="resume__hi">my resume</p>
+              <p class="resume__meta">1 page &middot; updated oct 2026</p>
+              <div class="resume__btns">
+                <button class="pixel-btn pixel-btn--magenta" id="resume-view" type="button"><span class="pixel-btn__ico" aria-hidden="true">&#9673;</span>View resume</button>
+                <a class="pixel-btn pixel-btn--lavender" href="assets/Anjali_Gundawar_Resume.pdf" download="Anjali_Gundawar_Resume.pdf"><span class="pixel-btn__ico" aria-hidden="true">&#11015;</span>Download resume</a>
+              </div>
+            </div>
+          </div>
+          <p class="resume__status"><span>&#9655; ready</span><span aria-hidden="true">resume.pdf &middot; 166 KB</span></p>
+        </div>
+
+        <!-- the viewer sub-window: the full page, scrollable, with download at the bottom -->
+        <div class="sub sub--resume" id="resume-sub" hidden>
+          <div class="sub__backdrop"></div>
+          <section class="sub__win" role="dialog" aria-modal="true" aria-label="Resume">
+            <header class="sub__bar"><span class="sub__file">resume.pdf</span><button class="sub__close" type="button" aria-label="Close resume">&times;</button></header>
+            <div class="sub__body">
+              <img class="sub__page" src="assets/resume-page.webp" width="1323" height="1871" loading="lazy"
+                alt="Resume of Anjali Gundawar: full stack developer and business student at VIT Vellore, B.Tech in Computer Science and Business Systems 2025 to 2029, CGPA 9.34. Game Developer and Technical Core at CodeChef-VIT. Projects: DishaVaani, Breadcrumbs, Clueminati 4.0, Sponsor Outreach Mail Sender, The Last Light, Frog Maze Run. Rank 9 in course; Best Freshers at IEEE-CS Hackbattle." />
+              <div class="sub__link">
+                <a class="pixel-btn pixel-btn--magenta" href="assets/Anjali_Gundawar_Resume.pdf" download="Anjali_Gundawar_Resume.pdf"><span class="pixel-btn__ico" aria-hidden="true">&#11015;</span>Download resume</a>
+                <a class="sub__url" href="assets/Anjali_Gundawar_Resume.pdf" target="_blank" rel="noopener">open the PDF in a new tab</a>
+              </div>
+            </div>
+          </section>
+        </div>
       </article>
     </div>
   </section>
@@ -234,6 +271,7 @@
   <script type="module" src="js/windows.js"></script>
   <script type="module" src="js/projects.js"></script>
   <script type="module" src="js/socials.js"></script>
+  <script type="module" src="js/resume.js"></script>
   <script type="module" src="js/pet.js"></script>
 </body>
 </html>
