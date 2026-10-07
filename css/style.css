@@ -173,8 +173,8 @@ body {
   rotate: 8deg;
 }
 
-/* ---------- particle canvas ---------- */
-#ascii-canvas {
+/* ---------- particle canvases (character, lettering) ---------- */
+#ascii-canvas, #letters-canvas {
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -182,6 +182,28 @@ body {
   pointer-events: none; /* clicks pass straight through */
   z-index: 10;
 }
+
+/* ---------- inside the console screen ----------
+   The desktop overlaps the last screen of the start section (negative margin),
+   so when the zoom finishes it is already filling the window: no sliding down.
+   Its thick pink border is the edge of the console screen you're now inside. */
+.start__stage { will-change: transform; }
+.desktop {
+  margin-top: -100vh;
+  margin-top: -100svh;
+  z-index: 12; /* above the particle canvases */
+  border: clamp(6px, 1vw, 12px) solid var(--pink);
+}
+/* a thin dark line on the inside of the pink, like the screen's inner bezel */
+.desktop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 3px var(--violet-deep), inset 0 0 0 6px rgb(27 26 30 / .35);
+  pointer-events: none;
+  z-index: 60;
+}
+body:not(.in-screen) .desktop { pointer-events: none; }
 
 @media (max-width: 640px) {
   .start { height: 240vh; }
