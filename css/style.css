@@ -91,7 +91,7 @@ body {
 }
 .pet[data-layer="console"] { z-index: 1; }
 .pet[data-layer="stack"] { z-index: 0; } /* previews are 1-4, so it runs behind them */
-.pet[data-layer="win"] { z-index: 60; }  /* perched on the open window, over the menu bar */
+.pet[data-layer="win"] { z-index: 55; }  /* perched on the open window, over the menu bar */
 .welcome { z-index: 2; }                 /* letters stay in front of the pet */
 
 /* ---------- the console ---------- */

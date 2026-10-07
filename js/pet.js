@@ -88,7 +88,10 @@ function context() {
   const s = start.getBoundingClientRect();
   const p = -s.top / (s.height - innerHeight); // how far through the explode scroll
   if (s.bottom > innerHeight * 0.5 && p < 0.2) return "console";
-  if (desktop.getBoundingClientRect().top <= 1) {
+  // the desktop counts once it fills the window and isn't hidden mid-transition
+  const atDesktop = document.body.classList.contains("in-screen") ||
+    (desktop.getBoundingClientRect().top <= 1 && desktop.style.visibility !== "hidden");
+  if (atDesktop) {
     if (viewer.classList.contains("has-open") && windowTop()) return "win";
     if (previewTops().length) return "stack";
   }
