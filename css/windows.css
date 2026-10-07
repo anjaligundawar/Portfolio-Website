@@ -115,14 +115,34 @@
   min-height: clamp(130px, 17vh, 230px);
   padding: 18px;
 }
-/* "AG" pixel emblem (drawn by tools/logo/build.py); bobs in 8-bit steps */
-.pv__logo {
-  width: 36%; aspect-ratio: 1;
-  image-rendering: pixelated;
-  filter: drop-shadow(4px 4px 0 var(--violet-deep));
-  animation: bob 1.6s steps(2) infinite;
+/* Anjali's pixel character (frames 0-1 of assets/sprite-sheet.png, the same
+   girl as on the console) breathing on a little round stage. The sheet is
+   8 x 3 frames, so background-size 800% 300% makes one frame fill the box,
+   and each frame step is 1/7 = 14.2857% along. */
+.pv__char {
+  position: relative;
+  width: 36%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: end center;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  /* hard-edged moon behind her + a darker floor band */
+  background:
+    linear-gradient(transparent 78%, var(--pink-shade) 78%),
+    radial-gradient(circle at 50% 40%, #fff6fc 0 26%, var(--blush) 26% 40%, var(--pink) 40%);
+  box-shadow: 4px 4px 0 var(--violet-deep);
+  overflow: hidden;
 }
-@keyframes bob { 50% { translate: 0 -4px; } }
+.pv__char i {
+  width: 68%;
+  aspect-ratio: 34 / 46;
+  margin-bottom: 2%;
+  background: url("../assets/sprite-sheet.png") 0 0 / 800% 300%;
+  image-rendering: pixelated;
+  animation: breathe 0.52s steps(1) infinite;
+}
+@keyframes breathe { 50% { background-position: 14.2857% 0; } }
 .pv__text { display: flex; flex-direction: column; gap: 4px; }
 .pv__small { font: clamp(18px, 1.7vw, 26px) var(--font-ui); color: var(--outline); }
 .pv__text b { font: 700 clamp(26px, 3.4vw, 50px) var(--font-hero); color: var(--magenta); }
@@ -460,5 +480,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pv { transition: none; }
-  .pv__logo { animation: none; }
+  .pv__char i { animation: none; }
 }
