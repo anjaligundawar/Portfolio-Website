@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anjali Gundawar's Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&family=Pacifico&family=Pixelify+Sans:wght@700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/windows.css" />
+</head>
+<body>
+  <!-- risograph grain over everything -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ============ SECTION 1: START PAGE ============ -->
+  <!-- The section is taller than the screen; .start__stage is "sticky", so it stays
+       pinned while you scroll through the extra height. That scroll distance is what
+       drives the explode animation (see js/explode.js). -->
+  <section class="start" id="start">
+    <div class="start__stage">
+      <header class="welcome">
+        <span class="sparkle" style="left:-6%; top:30%"></span>
+        <span class="sparkle" style="right:-4%; top:8%; animation-delay:.6s"></span>
+        <span class="sparkle" style="right:6%; bottom:-6%; width:9px; animation-delay:1.2s"></span>
+        <p class="welcome__small pixel-title bouncy" data-text="Welcome to"></p>
+        <h1 class="welcome__name pixel-hero bouncy" data-text="Anjali Gundawar's"></h1>
+        <p class="welcome__small pixel-title bouncy" data-text="Portfolio"></p>
+      </header>
+
+      <!-- Reserved spot for the pet sprite (coming later). -->
+      <div class="pet-slot" id="pet" aria-hidden="true"></div>
+
+      <div class="console" id="console" aria-label="Pink handheld game console">
+        <canvas class="console__art" id="console-art"></canvas>
+        <!-- button caps are added here by main.js (they're just for fun: pressing does nothing) -->
+        <div class="console__buttons" id="buttons" aria-hidden="true"></div>
+
+        <!-- the screen: positioned over the painted glass in main.js -->
+        <div class="console__screen" id="screen">
+          <!-- The pixel-art portrait is painted on the full-page <canvas> below,
+               positioned exactly over this box. -->
+          <div class="screen__portrait" id="portrait-box">
+            <span class="sr-only">Pixel-art portrait of Anjali</span>
+          </div>
+          <div class="screen__menu">
+            <pre class="lets-start" id="lets-start" aria-label="Lets Start"></pre>
+            <p class="scroll-hint"><span class="blink">▼</span> scroll down <span class="blink">▼</span></p>
+          </div>
+        </div>
+
+        <span class="console__alert" aria-hidden="true">!!!</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- One full-viewport canvas for the ASCII particles, so characters can fly
+       past the edges of the console screen. -->
+  <canvas id="ascii-canvas" aria-hidden="true"></canvas>
+
+  <!-- ============ SECTION 2: WINDOWS ============ -->
+  <!-- A retro "desktop" that fills the screen. All the windows sit on it as small
+       previews in a messy stack. Clicking one (or scrolling) zooms it open to its
+       full view; × or scrolling again zooms it back and the next one comes forward.
+       Styles: css/windows.css · behaviour: js/windows.js -->
+  <section class="desktop" id="desktop">
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <!-- pixel heart, drawn on a 7x6 grid; reused with <use href="#heart"> -->
+      <symbol id="heart" viewBox="0 0 7 6" shape-rendering="crispEdges">
+        <path fill="currentColor" d="M1 0h2v1h1V0h2v1h1v2H6v1H5v1H4v1H3V5H2V4H1V3H0V1h1z"/>
+        <path fill="#fff" fill-opacity=".7" d="M1 1h1v1H1z"/>
+      </symbol>
+    </svg>
+
+    <nav class="menubar" aria-label="Windows">
+      <a class="menubar__logo" href="#desktop" aria-label="Back to the desktop"><svg><use href="#heart"/></svg></a>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#socials">Socials</a>
+      <a href="#resume">Resume</a>
+      <span class="menubar__clock" id="clock">--:--</span>
+    </nav>
+
+    <!-- ---------- the stack of previews ---------- -->
+    <!-- Each preview's spot on the desktop comes from its slot class (slot-0 is the
+         front, centre one), which js/windows.js reshuffles as you go. -->
+    <div class="stack" id="stack">
+      <button class="pv pv--about" data-win="about" type="button" aria-label="Open About Me">
+        <span class="pv__bar"><span class="pv__title">About Me</span><span class="pv__num">1</span></span>
+        <span class="pv__body">
+          <img class="pv__avatar" src="assets/about-photo.webp" alt="" />
+          <span class="pv__text"><span class="pv__small">hi, my name is</span><b>Anjali</b>
+            <span class="hearts"><svg><use href="#heart"/></svg><svg><use href="#heart"/></svg><svg><use href="#heart"/></svg><svg><use href="#heart"/></svg><svg class="off"><use href="#heart"/></svg></span></span>
+        </span>
+        <span class="pv__foot">click to open</span>
+      </button>
+
+      <button class="pv pv--projects" data-win="projects" type="button" aria-label="Open Projects">
+        <span class="pv__bar"><span class="pv__title">Projects</span><span class="pv__num">2</span></span>
+        <span class="pv__body pv__body--icons"><i class="folder"></i><i class="folder"></i><i class="folder"></i><i class="folder"></i></span>
+        <span class="pv__foot">click to open</span>
+      </button>
+
+      <button class="pv pv--socials" data-win="socials" type="button" aria-label="Open Socials">
+        <span class="pv__bar"><span class="pv__title">Socials</span><span class="pv__num">3</span></span>
+        <span class="pv__body pv__body--icons"><i class="dot"></i><i class="dot"></i><i class="dot"></i></span>
+        <span class="pv__foot">click to open</span>
+      </button>
+
+      <button class="pv pv--resume" data-win="resume" type="button" aria-label="Open Resume">
+        <span class="pv__bar"><span class="pv__title">Resume</span><span class="pv__num">4</span></span>
+        <span class="pv__body pv__body--doc"><i></i><i></i><i></i><i></i></span>
+        <span class="pv__foot">click to open</span>
+      </button>
+    </div>
+
+    <p class="desktop__hint" aria-hidden="true">click a window or scroll <span class="blink">&#9660;</span></p>
+
+    <!-- ---------- full window views (one shows at a time) ---------- -->
+    <div class="viewer" id="viewer">
+      <!-- Window 1: About Me -->
+      <article class="win win--about" id="about" aria-labelledby="about-title" hidden>
+        <header class="win__bar">
+          <span class="win__icon" aria-hidden="true"><svg><use href="#heart"/></svg></span>
+          <h2 class="win__title" id="about-title">About Me</h2>
+          <span class="win__btns"><i aria-hidden="true">_</i><i aria-hidden="true">&#9633;</i><button class="win__close" type="button" aria-label="Close window">&times;</button></span>
+        </header>
+        <div class="win__body">
+          <div class="win__menu" aria-hidden="true"><span>File</span><span>Edit</span><span>View</span><span>Help</span></div>
+
+          <div class="about">
+            <div class="about__text">
+              <p class="about__hi">hi, my name is<span class="blink">_</span></p>
+              <h3 class="about__name">Anjali Gundawar</h3>
+              <p class="about__tagline">I build interactive tech with a <mark>strategic edge</mark>.</p>
+              <hr class="about__rule" />
+              <p class="about__intro">I am a full stack developer and business thinker focused on building
+                creative digital projects and positioning them for real-world market success.</p>
+              <ul class="about__chips">
+                <li class="chip chip--magenta">2nd year</li>
+                <li class="chip chip--lavender">B.Tech in Computer Science &amp; Business Systems</li>
+                <li class="chip chip--pink">Vellore Institute of Technology</li>
+              </ul>
+            </div>
+
+            <figure class="photo">
+              <div class="photo__bar" aria-hidden="true"><span>anjali.png</span><i>&times;</i></div>
+              <div class="photo__view">
+                <span class="photo__sun" aria-hidden="true"></span>
+                <span class="photo__grid" aria-hidden="true"></span>
+                <img src="assets/about-photo.webp" alt="Photo of Anjali smiling, in a denim jacket" width="560" height="702" />
+                <span class="sparkle" style="left:10%; top:14%"></span>
+                <span class="sparkle" style="right:12%; top:34%; width:10px; animation-delay:.8s"></span>
+              </div>
+              <figcaption class="photo__status">
+                <span>mood</span>
+                <span class="hearts" aria-label="4 out of 5 hearts">
+                  <svg><use href="#heart"/></svg><svg><use href="#heart"/></svg><svg><use href="#heart"/></svg><svg><use href="#heart"/></svg><svg class="off"><use href="#heart"/></svg>
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <nav class="about__links" aria-label="Jump to a window">
+            <a class="pixel-btn pixel-btn--magenta" href="#resume"><span class="pixel-btn__ico" aria-hidden="true">&#9636;</span>Resume</a>
+            <a class="pixel-btn pixel-btn--lavender" href="#projects"><span class="pixel-btn__ico" aria-hidden="true">&#9638;</span>Projects</a>
+            <a class="pixel-btn pixel-btn--pink" href="#socials"><span class="pixel-btn__ico" aria-hidden="true">&#9673;</span>Socials</a>
+          </nav>
+        </div>
+      </article>
+
+      <!-- Placeholders for the next windows -->
+      <article class="win win--soon win--projects" id="projects" aria-labelledby="projects-title" hidden>
+        <header class="win__bar"><span class="win__icon" aria-hidden="true"><svg><use href="#heart"/></svg></span><h2 class="win__title" id="projects-title">Projects</h2><span class="win__btns"><i aria-hidden="true">_</i><i aria-hidden="true">&#9633;</i><button class="win__close" type="button" aria-label="Close window">&times;</button></span></header>
+        <div class="win__body"><p class="win__loading">loading projects<span class="blink">...</span></p></div>
+      </article>
+      <article class="win win--soon win--socials" id="socials" aria-labelledby="socials-title" hidden>
+        <header class="win__bar"><span class="win__icon" aria-hidden="true"><svg><use href="#heart"/></svg></span><h2 class="win__title" id="socials-title">Socials</h2><span class="win__btns"><i aria-hidden="true">_</i><i aria-hidden="true">&#9633;</i><button class="win__close" type="button" aria-label="Close window">&times;</button></span></header>
+        <div class="win__body"><p class="win__loading">loading socials<span class="blink">...</span></p></div>
+      </article>
+      <article class="win win--soon win--resume" id="resume" aria-labelledby="resume-title" hidden>
+        <header class="win__bar"><span class="win__icon" aria-hidden="true"><svg><use href="#heart"/></svg></span><h2 class="win__title" id="resume-title">Resume</h2><span class="win__btns"><i aria-hidden="true">_</i><i aria-hidden="true">&#9633;</i><button class="win__close" type="button" aria-label="Close window">&times;</button></span></header>
+        <div class="win__body"><p class="win__loading">loading resume<span class="blink">...</span></p></div>
+      </article>
+    </div>
+  </section>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/windows.js"></script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+/* Start page. Colors and type come from tokens.css (see STYLE.md). */
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* risograph grain: a tile of SVG noise fixed over the page */
+.grain {
+  position: fixed; inset: 0;
+  background-image: var(--grain);
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* ---------- start section + sticky stage ---------- */
+.start {
+  /* 100vh of stage + 160vh of "scroll runway" for the explode effect */
+  height: 260vh;
+  position: relative;
+  background:
+    radial-gradient(var(--bg-alt) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--bg);
+}
+.start__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 3vh, 36px);
+  padding: 16px;
+  overflow: hidden;
+}
+
+/* ---------- welcome heading ---------- */
+.welcome {
+  position: relative;
+  text-align: center;
+  user-select: none;
+}
+.welcome__small {
+  font-size: clamp(10px, 1.6vw, 16px);
+  letter-spacing: 0.2em;
+  margin: 0;
+}
+.welcome__name {
+  font-size: clamp(30px, 6vw, 64px);
+  line-height: 1.25;
+  margin: 0.05em 0 0.25em;
+}
+
+/* Each letter is its own <span> (built in main.js) so it can move alone. */
+.bouncy span {
+  display: inline-block;
+  animation: wave 2.6s steps(6) infinite; /* steps() = choppy, 8-bit motion */
+  animation-delay: calc(var(--i) * 80ms);
+  transition: transform 0.3s cubic-bezier(.3, 1.8, .5, 1);
+}
+.bouncy span.pop {
+  animation: none;
+  transform: translateY(-0.4em) scale(1.15);
+}
+@keyframes wave {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-0.14em); }
+}
+
+/* ---------- pet slot (reserved) ---------- */
+.pet-slot { position: absolute; width: 72px; height: 72px; }
+
+/* ---------- the console ---------- */
+/* --px is the size of one art pixel, set in main.js so the console
+   scales by whole pixels where it can. Everything inside is sized in
+   --px too, so the whole device scales as one. */
+.console {
+  --px: 5px;
+  position: relative;
+  width: calc(var(--px) * 180);
+  height: calc(var(--px) * 90);
+  flex: none;
+  will-change: transform, opacity;
+}
+.console__art {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  image-rendering: pixelated; /* no smoothing when scaling up */
+}
+.console__screen {
+  position: absolute; /* left/top/width/height set from SCREEN in console.js */
+  display: grid;
+  /* minmax(0, …) stops a track from growing to fit its content */
+  grid-template-columns: 46% minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+}
+/* scanlines on the glass */
+.console__screen::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, rgb(27 26 30 / .15) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+}
+.screen__portrait {
+  position: relative;
+  /* a little breathing room so her feet and shadow don't touch the bezel */
+  margin: calc(var(--px) * 2) 0 calc(var(--px) * 3);
+}
+.screen__menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--px) * 5);
+  padding: calc(var(--px) * 3) calc(var(--px) * 2);
+  min-height: 0;
+}
+.lets-start {
+  margin: 0;
+  font-family: ui-monospace, "Courier New", monospace;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--pink);
+  /* font-size set from JS so the ASCII block fits its column */
+}
+.scroll-hint {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: calc(var(--px) * 2.2);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  white-space: nowrap;
+}
+.blink { animation: blink 1s steps(2, start) infinite; }
+@keyframes blink { to { visibility: hidden; } }
+
+/* ---- pressable buttons ---- */
+.btn {
+  position: absolute; /* left/top/width/height set from BUTTONS in console.js */
+  image-rendering: pixelated;
+  cursor: pointer;
+  touch-action: none; /* let a finger drag the sticks without scrolling */
+  transition: transform 60ms steps(1); /* snap, no smooth slide: feels 8-bit */
+}
+/* pressed: the cap drops one art pixel into its socket, hiding the edge */
+.btn.is-down { transform: translate(var(--dx, 0px), calc(var(--px) + var(--dy, 0px))); }
+
+/* "!!!" sticker on the console corner */
+.console__alert {
+  position: absolute;
+  right: calc(var(--px) * 3);
+  top: calc(var(--px) * -3);
+  padding: calc(var(--px) * 0.6) calc(var(--px) * 1.4);
+  background: var(--magenta);
+  color: var(--ink);
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: calc(var(--px) * 3);
+  box-shadow: 0 var(--px) 0 var(--violet-deep);
+  rotate: 8deg;
+}
+
+/* ---------- particle canvas ---------- */
+#ascii-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* clicks pass straight through */
+  z-index: 10;
+}
+
+@media (max-width: 640px) {
+  .start { height: 240vh; }
+  .start__stage { gap: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bouncy span, .blink { animation: none; }
+}
