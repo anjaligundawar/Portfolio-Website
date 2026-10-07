@@ -158,9 +158,22 @@ desktop.addEventListener("click", (e) => {
 // Once the desktop fills the screen the page can't scroll any further, so
 // "scroll down" means "open the next window" instead.
 const atDesktop = () => desktop.getBoundingClientRect().top <= 1;
-const openBody = () => (openId ? document.getElementById(openId).querySelector(".win__body") : null);
+const openWinEl = () => (openId ? document.getElementById(openId) : null);
 const canScroll = (el, dir) =>
   dir > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 2 : el.scrollTop > 0;
+// A window can hold scrolling boxes inside its body (like the Projects list).
+// Walk up from where the pointer is and return the first box that scrolls.
+function scrollerAt(target) {
+  const win = openWinEl();
+  if (!win || !win.contains(target)) return null;
+  for (let el = target; el && el !== win; el = el.parentElement) {
+    const oy = getComputedStyle(el).overflowY;
+    if ((oy === "auto" || oy === "scroll") && el.scrollHeight > el.clientHeight + 2) return el;
+  }
+  return null;
+}
+// a window with a pop-up open inside it (data-locked) keeps scroll from switching windows
+const locked = () => openWinEl()?.hasAttribute("data-locked");
 
 function step(dir) {
   if (busy) return;
@@ -177,25 +190,27 @@ addEventListener("wheel", (e) => {
   lastWheel = now;
   if (!atDesktop()) return; // still on the console: scroll normally
   const dir = Math.sign(e.deltaY);
-  const b = openBody();
-  if (b && b.contains(e.target) && canScroll(b, dir)) return; // let the window's content scroll
+  // let the window's content scroll; once a list hits its end, carry on to the box around it
+  for (let b = scrollerAt(e.target); b; b = scrollerAt(b.parentElement)) {
+    if (canScroll(b, dir)) return;
+  }
   if (dir < 0 && !openId) return; // scrolling back up to the console
   e.preventDefault();
-  if (fresh) step(dir);
+  if (fresh && !locked()) step(dir);
 }, { passive: false });
 
 let touchY = null;
 let touchStart = null; // the window content's scroll position when the swipe began
 addEventListener("touchstart", (e) => {
   touchY = e.touches[0].clientY;
-  const b = openBody();
-  touchStart = b && b.contains(e.target) ? { top: b.scrollTop, b } : null;
+  const b = scrollerAt(e.target);
+  touchStart = b ? { top: b.scrollTop, b } : null;
 }, { passive: true });
 addEventListener("touchend", (e) => {
   if (touchY === null || !atDesktop()) return;
   const dy = touchY - e.changedTouches[0].clientY; // > 0 = swiped up = "scroll down"
   touchY = null;
-  if (Math.abs(dy) < 60) return;
+  if (Math.abs(dy) < 60 || locked()) return;
   const dir = Math.sign(dy);
   // only switch if the window's content was already at its end when the swipe began
   if (touchStart) {
@@ -211,7 +226,8 @@ addEventListener("keydown", (e) => {
   if (e.key === "Escape") return closeWin();
   const dir = { ArrowDown: 1, PageDown: 1, ArrowUp: -1, PageUp: -1 }[e.key];
   if (!dir) return;
-  const b = openBody();
+  if (locked()) return;
+  const b = openWinEl()?.querySelector(".win__body");
   if (b && canScroll(b, dir)) return;
   if (dir < 0 && !openId) return;
   e.preventDefault();
