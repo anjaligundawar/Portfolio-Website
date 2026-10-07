@@ -4,6 +4,7 @@
 //   × / Esc / scroll up  -> it zooms back; the next window comes to the front
 //   scroll down while open -> zoom out of this one, zoom into the next
 //   scroll down on the last window -> leave the console screen, back to the start
+//   (also once the last window has been opened and closed again)
 // Getting in and out of the console screen itself is done in main.js; it
 // sends "screen:enter" / "screen:leave" / "screen:home" events, and we send
 // "screen:exit" when it's time to go home.
@@ -23,6 +24,7 @@ let order = [...START_ORDER];
 const LAST = "resume"; // scrolling down on this window leaves the console
 let openId = null;
 let busy = false; // true while a zoom or shuffle is playing
+let seenLast = false; // the last window has been opened since we came in
 
 // ---------- 1. menu bar clock ----------
 const clock = document.getElementById("clock");
@@ -59,6 +61,7 @@ addEventListener("screen:enter", () => {
 addEventListener("screen:home", () => {
   if (!shown || openId) return;
   shown = false;
+  seenLast = false;
   order = [...START_ORDER];
   placeStack();
   Object.values(previews).forEach((pv) => pv.classList.add("is-hidden"));
@@ -78,6 +81,7 @@ async function openWin(id) {
   if (busy || openId) return;
   busy = true;
   openId = id;
+  if (id === LAST) seenLast = true;
   const pv = previews[id];
   const win = document.getElementById(id);
   win.hidden = false;
@@ -137,9 +141,9 @@ async function showWin(id) {
 }
 
 async function next() {
-  if (openId === LAST) {
-    // the end: close it and zoom back out of the console screen
-    await closeWin();
+  if (openId === LAST || (!openId && seenLast)) {
+    // the end: close it (if it's open) and zoom back out of the console screen
+    if (openId) await closeWin();
     dispatchEvent(new Event("screen:exit"));
     return;
   }

@@ -233,7 +233,7 @@ let glide = null;
 function glideTo(y, ms) {
   const from = scrollY;
   const t0 = performance.now();
-  const id = {};
+  const id = { t0 };
   glide = id;
   const frame = (now) => {
     if (glide !== id) return; // cancelled, or another glide took over
@@ -250,7 +250,8 @@ function glideTo(y, ms) {
 let lastWheel = 0;
 addEventListener("wheel", () => {
   const now = performance.now();
-  if (now - lastWheel > 220) glide = null;
+  // (skip the wheel that started this glide, e.g. the one that left the last window)
+  if (now - lastWheel > 220 && glide && now - glide.t0 > 100) glide = null;
   lastWheel = now;
 }, { passive: true });
 addEventListener("touchstart", () => { glide = null; }, { passive: true });
