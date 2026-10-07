@@ -114,7 +114,7 @@ export class Explosion {
     const diag = Math.hypot(this.w, this.h);
 
     if (!pixels) {
-      ctx.font = `${chH}px ui-monospace, "Courier New", monospace`;
+      ctx.font = `700 ${chH}px ui-monospace, "Courier New", monospace`;
       ctx.textBaseline = "top";
       ctx.fillStyle = this.color;
     }
