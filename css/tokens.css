@@ -1,0 +1,88 @@
+/* ============================================================
+   Design tokens + shared utilities. See STYLE.md.
+   Every section of the site imports this file.
+   ============================================================ */
+:root {
+  /* palette: pink / violet / lavender only */
+  --bg: #1B1A1E;
+  --bg-alt: #28263A;
+  --ink: #2B2235;
+  --violet-deep: #4E3F6E;
+  --outline-sm: #5B45A8;
+  --outline: #6E48C8;
+  --violet-muted: #6F5A92;
+  --lavender: #9A80C2;
+  --lavender-light: #B9A6F2;
+  --pink-shade: #D58AE6;
+  --magenta: #E05FC6;
+  --pink: #F2A8F0;
+  --blush: #F9CDEB;
+  --text: #F3F0F8;
+
+  /* type */
+  --font-hero: "Pixelify Sans", "Silkscreen", monospace;
+  --font-title: "Silkscreen", "Pixelify Sans", monospace;
+  --font-ui: "VT323", ui-monospace, monospace;
+  --font-body: "M PLUS Rounded 1c", "Nunito", system-ui, sans-serif;
+
+  /* SVG noise for the risograph grain, tinted --violet-deep */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .306 0 0 0 0 .247 0 0 0 0 .431 0 0 0 2.2 -1.1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Pixel lettering: 8 hard shadows make the outline, one more shadow
+   just under the glyph acts as the darker "shading" step.
+   The first shadow in the list is painted on top. */
+.pixel-hero {
+  font-family: var(--font-hero);
+  font-weight: 700;
+  color: var(--pink);
+  --o: 0.03em; /* outline thickness (thicker closes the gap in "G") */
+  text-shadow:
+    0 0.04em 0 var(--pink-shade),
+    var(--o) 0 0 var(--outline), calc(var(--o) * -1) 0 0 var(--outline),
+    0 var(--o) 0 var(--outline), 0 calc(var(--o) * -1) 0 var(--outline),
+    var(--o) var(--o) 0 var(--outline), calc(var(--o) * -1) var(--o) 0 var(--outline),
+    var(--o) calc(var(--o) * -1) 0 var(--outline), calc(var(--o) * -1) calc(var(--o) * -1) 0 var(--outline),
+    0 0.08em 0 var(--violet-deep); /* extruded drop */
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+.pixel-title {
+  font-family: var(--font-title);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--lavender-light);
+  --o: 0.09em;
+  text-shadow:
+    var(--o) 0 0 var(--outline-sm), calc(var(--o) * -1) 0 0 var(--outline-sm),
+    0 var(--o) 0 var(--outline-sm), 0 calc(var(--o) * -1) 0 var(--outline-sm),
+    var(--o) var(--o) 0 var(--outline-sm), calc(var(--o) * -1) var(--o) 0 var(--outline-sm),
+    var(--o) calc(var(--o) * -1) 0 var(--outline-sm), calc(var(--o) * -1) calc(var(--o) * -1) 0 var(--outline-sm);
+  -webkit-font-smoothing: none;
+}
+
+/* Extruded floating panel: flat face + thick solid edge, no blur. */
+.panel {
+  background: var(--blush);
+  color: var(--ink);
+  box-shadow: 0 6px 0 var(--violet-deep), 6px 6px 0 var(--violet-deep);
+}
+
+/* 4-point sparkle */
+.sparkle {
+  position: absolute;
+  width: 14px; aspect-ratio: 1;
+  background: var(--text);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  animation: twinkle 2.4s steps(4) infinite;
+}
+@keyframes twinkle {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.4); opacity: 0.4; }
+}
+
+:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sparkle { animation: none; }
+}
