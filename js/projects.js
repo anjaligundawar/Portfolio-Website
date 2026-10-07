@@ -24,7 +24,7 @@ const PROJECTS = [
     id: "clueminati",
     name: "Clueminati 4.0 Game",
     summary: "An interactive mystery-solving and puzzle game built for the Clueminati 4.0 event hosted by CodeChef-VIT. Players solve clues and navigate custom interactive game mechanics to crack the mystery before time runs out.",
-    tech: ["JavaScript", "HTML5 Canvas", "Node.js"],
+    tech: ["Godot Engine", "GDScript"],
     repo: "https://github.com/CodeChefVIT/GTA-12",
   },
   {
