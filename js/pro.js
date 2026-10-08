@@ -1,4 +1,4 @@
-// Professional mode: the switch in the top left swaps the playful console
+// Professional mode: the switch in the top right swaps the playful console
 // site for a plain, recruiter-friendly page (the .pro block in index.html).
 // The choice is kept in localStorage; the tiny script in <head> reads it back
 // before the first paint. Other scripts check isPro() to pause themselves

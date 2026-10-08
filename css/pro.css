@@ -44,7 +44,7 @@ html[data-mode="pro"] ::-webkit-scrollbar-thumb:hover { background: #3A3549; }
 .mode-toggle {
   position: fixed;
   top: 19px; /* sits inside the windows menu bar, which is inset by the desktop's frame */
-  left: 22px;
+  right: 22px;
   z-index: 300; /* over the menu bar, the pet and the cursor trail */
   display: flex;
   align-items: center;
@@ -75,13 +75,13 @@ html[data-mode="pro"] ::-webkit-scrollbar-thumb:hover { background: #3A3549; }
   transition: transform 160ms steps(3);
 }
 .mode-toggle[aria-checked="true"] .mode-toggle__knob { transform: translateX(14px); }
-/* make room for it at the left end of the windows menu bar */
-.menubar { padding-left: 168px; }
+/* make room for it at the right end of the windows menu bar, after the clock */
+.menubar { padding-right: 168px; }
 
 /* the same switch, dressed for professional mode */
 html[data-mode="pro"] .mode-toggle {
   top: 14px;
-  left: 16px;
+  right: 16px;
   height: 34px;
   padding: 0 6px 0 14px;
   gap: 10px;
@@ -105,13 +105,13 @@ html[data-mode="pro"] .mode-toggle__knob {
 
 @media (max-width: 640px) {
   /* phones: just "Pro" in the crowded menu bar */
-  .menubar { padding-left: 104px; }
+  .menubar { padding-right: 104px; }
   .mode-toggle { gap: 6px; padding-left: 8px; }
   html:not([data-mode="pro"]) .mode-toggle__more { display: none; }
 }
 @media (max-width: 480px) {
-  /* the switch takes the heart's corner; × still closes a window */
-  .menubar { padding-left: 92px; }
+  /* narrow phones: drop the heart so all four links fit; × still closes a window */
+  .menubar { padding-left: 10px; padding-right: 88px; }
   .menubar__logo { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -295,7 +295,7 @@ html[data-mode="pro"] .mode-toggle__knob {
 /* projects */
 .pro-projects {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* two to a row */
   gap: 16px;
   margin: 0;
   padding: 0;
@@ -361,6 +361,7 @@ html[data-mode="pro"] .mode-toggle__knob {
   .pro-nav a[aria-current] { color: var(--pro-text); }
 }
 @media (max-width: 520px) {
+  .pro-projects { grid-template-columns: 1fr; } /* phones: one per row, two would be too narrow to read */
   .pro-stats { grid-template-columns: 1fr; }
   .pro-skills div { grid-template-columns: 1fr; gap: 2px; }
 }
