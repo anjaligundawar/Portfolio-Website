@@ -12,6 +12,11 @@
        mode never sees the playful page flash first (js/pro.js does the rest). -->
   <script>
     try { if (localStorage.getItem("mode") === "pro") document.documentElement.dataset.mode = "pro"; } catch (e) {}
+    // A reload always starts from the very top: the browser shouldn't put the
+    // scroll back where it was, and a leftover #section link shouldn't jump.
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+    addEventListener("load", () => scrollTo(0, 0));
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
