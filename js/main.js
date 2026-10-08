@@ -4,6 +4,7 @@ import { drawConsole, drawCap, BUTTONS, SCREEN, W as CONSOLE_W, H as CONSOLE_H }
 import { loadFrames, SEQUENCE } from "./sprite.js";
 
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const isPro = () => document.documentElement.dataset.mode === "pro";
 const css = getComputedStyle(document.documentElement);
 const token = (name) => css.getPropertyValue(`--${name}`).trim();
 
@@ -164,6 +165,7 @@ let drawn = 0;
 let lastFrame = performance.now();
 function render(now = performance.now()) {
   ticking = false;
+  if (isPro()) return; // professional mode: the console is hidden
   let target = progress();
   if (target > 0.995) target = 1; // the last pixel of scroll can land a hair short
   const dt = Math.min(64, now - lastFrame);
@@ -224,7 +226,21 @@ function requestFrame() {
 await document.fonts.ready; // heading height depends on the pixel fonts
 layout();
 render();
-addEventListener("resize", () => { layout(); requestFrame(); });
+addEventListener("resize", () => { if (!isPro()) { layout(); requestFrame(); } });
+
+// Professional mode (js/pro.js) hides all of this. Going in, step out of the
+// console screen so windows.js lets go of the scroll; coming back, measure
+// again (nothing had a size while hidden) and start from the top.
+addEventListener("mode:change", (e) => {
+  glide = null;
+  if (e.detail.pro) {
+    if (inside) { inside = false; document.body.classList.remove("in-screen"); dispatchEvent(new Event("screen:leave")); }
+  } else {
+    drawn = 0;
+    layout();
+    requestFrame();
+  }
+});
 
 // ---------- 6. gliding in and out ----------
 // glideTo() scrolls the page itself, easing in and out. render() follows the
@@ -285,7 +301,7 @@ addEventListener("screen:exit", () => glideTo(0, 1800));
 // Play the sprite animation: show a frame, wait its time, move on.
 // It pauses while the page is scrolled, so the explosion stays steady.
 function tick() {
-  if (progress() === 0 && !reducedMotion) {
+  if (progress() === 0 && !reducedMotion && !isPro()) {
     step = (step + 1) % SEQUENCE.length;
     fx.setImageData(frames[SEQUENCE[step][0]]);
     requestFrame();

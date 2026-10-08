@@ -8,9 +8,15 @@
   <link rel="icon" href="assets/favicon/favicon-32.png" type="image/png" sizes="32x32" />
   <link rel="icon" href="assets/favicon/favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png" />
+  <!-- Pick the mode before anything paints, so a visitor who chose professional
+       mode never sees the playful page flash first (js/pro.js does the rest). -->
+  <script>
+    try { if (localStorage.getItem("mode") === "pro") document.documentElement.dataset.mode = "pro"; } catch (e) {}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&family=Pacifico&family=Pixelify+Sans:wght@700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/windows.css" />
@@ -19,8 +25,15 @@
   <link rel="stylesheet" href="css/resume.css" />
   <link rel="stylesheet" href="css/cursor.css" />
   <link rel="stylesheet" href="css/scrollbar.css" />
+  <link rel="stylesheet" href="css/pro.css" />
 </head>
 <body>
+  <!-- the playful / professional switch, pinned top left (js/pro.js) -->
+  <button class="mode-toggle" id="mode-toggle" type="button" role="switch" aria-checked="false">
+    <span class="mode-toggle__label">Pro<span class="mode-toggle__more">fessional</span></span>
+    <span class="mode-toggle__track" aria-hidden="true"><span class="mode-toggle__knob"></span></span>
+  </button>
+
   <!-- risograph grain over everything -->
   <div class="grain" aria-hidden="true"></div>
 
@@ -273,6 +286,114 @@
     </div>
   </section>
 
+  <!-- ============ PROFESSIONAL MODE ============ -->
+  <!-- Shown instead of everything above when the switch is on (html[data-mode="pro"]).
+       Styles: css/pro.css · projects and behaviour: js/pro.js -->
+  <div class="pro" id="pro">
+    <aside class="pro-side">
+      <img class="pro-side__photo" src="assets/about-photo.webp" alt="Photo of Anjali Gundawar" width="560" height="702" loading="lazy" />
+      <h1 class="pro-side__name">Anjali Gundawar</h1>
+      <p class="pro-side__role">Full stack developer &middot; CS &amp; Business Systems at VIT</p>
+      <p class="pro-side__tag">I build interactive tech with a strategic edge.</p>
+
+      <nav class="pro-nav" aria-label="Sections">
+        <a href="#pro-about">About</a>
+        <a href="#pro-experience">Experience</a>
+        <a href="#pro-projects">Projects</a>
+        <a href="#pro-skills">Skills</a>
+        <a href="#pro-contact">Contact</a>
+      </nav>
+
+      <div class="pro-side__actions">
+        <a class="pro-btn pro-btn--primary" href="assets/Anjali_Gundawar_Resume.pdf" target="_blank" rel="noopener">View resume</a>
+        <a class="pro-btn" href="assets/Anjali_Gundawar_Resume.pdf" download="Anjali_Gundawar_Resume.pdf">Download</a>
+      </div>
+
+      <ul class="pro-socials" aria-label="Find me on">
+        <li><a href="https://www.linkedin.com/in/anjali-gundawar/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in a new tab)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1V21h-4v-5.1c0-1.22-.02-2.79-1.7-2.79-1.7 0-1.96 1.33-1.96 2.7V21h-4z"/></svg></a></li>
+        <li><a href="https://github.com/anjaligundawar" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in a new tab)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.56 9.56 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a></li>
+        <li><a href="mailto:anjali.n.gundawar@gmail.com" aria-label="Email">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3 6h18v12H3zM3 7l9 6 9-6"/></svg></a></li>
+      </ul>
+    </aside>
+
+    <main class="pro-main">
+      <section class="pro-sec" id="pro-about" aria-labelledby="pro-about-h">
+        <h2 class="pro-sec__h" id="pro-about-h">About</h2>
+        <p class="pro-lead">I am a full stack developer and business thinker focused on building creative digital
+          projects and positioning them for real-world market success.</p>
+        <p>I'm a second-year B.Tech student in Computer Science &amp; Business Systems at Vellore Institute of
+          Technology. I work across the stack, from React frontends to Python ML pipelines, and I build games in
+          Godot and Unity as Game Developer and Technical Core at CodeChef-VIT.</p>
+        <dl class="pro-stats">
+          <div><dt>CGPA</dt><dd>9.34</dd></div>
+          <div><dt>Course rank</dt><dd>#9</dd></div>
+          <div><dt>Hackbattle</dt><dd>Best Freshers</dd></div>
+        </dl>
+      </section>
+
+      <section class="pro-sec" id="pro-experience" aria-labelledby="pro-exp-h">
+        <h2 class="pro-sec__h" id="pro-exp-h">Experience</h2>
+        <ol class="pro-timeline">
+          <li>
+            <div class="pro-timeline__head">
+              <h3>Game Developer &amp; Technical Core <span>&middot; CodeChef-VIT</span></h3>
+              <span class="pro-date">2025 &ndash; Present</span>
+            </div>
+            <ul>
+              <li>Developed the Clueminati 4.0 game, a timed mystery and puzzle game played at CodeChef-VIT's Clueminati 4.0 event.</li>
+              <li>Built Frog Maze Run, a 3D procedural maze game with custom lighting, firefly movement and mystery-orb power-ups.</li>
+              <li>Built the frontend for the chapter's sponsor outreach platform, used to pitch corporate sponsors for major campus events.</li>
+            </ul>
+          </li>
+        </ol>
+        <h3 class="pro-sub">Education</h3>
+        <ol class="pro-timeline">
+          <li>
+            <div class="pro-timeline__head">
+              <h3>B.Tech, Computer Science &amp; Business Systems <span>&middot; VIT Vellore</span></h3>
+              <span class="pro-date">2025 &ndash; 2029</span>
+            </div>
+            <p>CGPA 9.34, rank 9 in the course.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="pro-sec" id="pro-projects" aria-labelledby="pro-proj-h">
+        <h2 class="pro-sec__h" id="pro-proj-h">Projects</h2>
+        <ul class="pro-projects" id="pro-project-list"><!-- built by js/pro.js --></ul>
+      </section>
+
+      <section class="pro-sec" id="pro-skills" aria-labelledby="pro-skills-h">
+        <h2 class="pro-sec__h" id="pro-skills-h">Skills</h2>
+        <dl class="pro-skills">
+          <div><dt>Languages</dt><dd>Python, C, C++, Java, JavaScript, TypeScript, C#, GDScript, SQL, HTML, CSS</dd></div>
+          <div><dt>Frameworks</dt><dd>React, Tailwind CSS, PyTorch, HuggingFace Transformers, scikit-learn, Sentence-Transformers, Pandas</dd></div>
+          <div><dt>AI / ML</dt><dd>RAG pipelines, open-source LLMs, NLP classification (DistilBERT, TF-IDF)</dd></div>
+          <div><dt>Game dev</dt><dd>Unreal Engine, Unity, Godot</dd></div>
+        </dl>
+        <h3 class="pro-sub">Achievements</h3>
+        <ul class="pro-list">
+          <li>Rank 9 in the B.Tech Computer Science &amp; Business Systems course at VIT Vellore.</li>
+          <li>Won Best Freshers at IEEE-CS's Hackbattle hackathon.</li>
+        </ul>
+      </section>
+
+      <section class="pro-sec pro-contact" id="pro-contact" aria-labelledby="pro-contact-h">
+        <h2 class="pro-sec__h" id="pro-contact-h">Contact</h2>
+        <p>I'm open to internships, collaborations and hackathon teams. The quickest way to reach me is email.</p>
+        <div class="pro-side__actions">
+          <a class="pro-btn pro-btn--primary" href="mailto:anjali.n.gundawar@gmail.com">anjali.n.gundawar@gmail.com</a>
+          <a class="pro-btn" href="https://www.linkedin.com/in/anjali-gundawar/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </section>
+
+      <footer class="pro-foot">&copy; 2026 Anjali Gundawar</footer>
+    </main>
+  </div>
+
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/windows.js"></script>
   <script type="module" src="js/projects.js"></script>
@@ -280,5 +401,6 @@
   <script type="module" src="js/resume.js"></script>
   <script type="module" src="js/pet.js"></script>
   <script type="module" src="js/cursor.js"></script>
+  <script type="module" src="js/pro.js"></script>
 </body>
 </html>

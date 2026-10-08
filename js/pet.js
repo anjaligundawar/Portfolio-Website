@@ -381,6 +381,8 @@ if (reducedMotion) {
   const loop = (now) => {
     const dt = Math.min(0.05, (now - last) / 1000); // a background tab can pause for ages
     last = now;
+    // professional mode hides the pet; keep it paused until it comes back
+    if (document.documentElement.dataset.mode === "pro") { requestAnimationFrame(loop); return; }
     step(dt);
     animate(dt);
     draw();
