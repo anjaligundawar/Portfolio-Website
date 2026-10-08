@@ -160,6 +160,8 @@ function markMenu(id) {
 // ---------- 5. clicks ----------
 Object.values(previews).forEach((pv) => pv.addEventListener("click", () => showWin(pv.dataset.win)));
 document.querySelectorAll(".win__close").forEach((b) => b.addEventListener("click", closeWin));
+// switching to professional mode (js/pro.js) shuts the open window
+addEventListener("mode:change", (e) => { if (e.detail.pro) closeWin(); });
 
 // links like href="#projects" (menu bar, About Me buttons) open that window
 desktop.addEventListener("click", (e) => {

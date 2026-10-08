@@ -22,7 +22,9 @@ if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
   addEventListener("pointermove", (e) => {
     // mouse only (no trail under a finger), and not once we're inside the
     // console screen with the stacked windows
-    if (e.pointerType !== "mouse" || document.body.classList.contains("in-screen")) {
+    // (and none at all in professional mode)
+    if (e.pointerType !== "mouse" || document.body.classList.contains("in-screen") ||
+        document.documentElement.dataset.mode === "pro") {
       last = null;
       return;
     }
