@@ -4,7 +4,7 @@ import { PALETTE } from "./project-icons.js";
 
 // href: null = shown but not linked yet
 const SOCIALS = [
-  { id: "linkedin", name: "LinkedIn", handle: "in/anjali-g", href: "https://www.linkedin.com/in/anjali-g" },
+  { id: "linkedin", name: "LinkedIn", handle: "in/anjali-gundawar", href: "https://www.linkedin.com/in/anjali-gundawar/" },
   { id: "github", name: "GitHub", handle: "@anjaligundawar", href: "https://github.com/anjaligundawar" },
   { id: "leetcode", name: "LeetCode", handle: "coming soon", href: null },
 ];
